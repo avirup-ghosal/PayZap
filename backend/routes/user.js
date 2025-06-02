@@ -6,6 +6,7 @@ const zod = require("zod");
 const { User, Account } = require("../db");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
+const bycrypt = require("bcrypt");
 const  { authMiddleware } = require("../middleware");
 
 const signupBody = zod.object({
@@ -32,10 +33,10 @@ router.post("/signup", async (req, res) => {
             message: "Email already taken/Incorrect inputs"
         })
     }
-
+   const hashedPassword=await bycrypt.hash(req.body.password,10);
     const user = await User.create({
         username: req.body.username,
-        password: req.body.password,
+        password: hashedPassword,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     })
@@ -74,8 +75,20 @@ router.post("/signin", async (req, res) => {
         username: req.body.username,
         password: req.body.password
     });
+    if(!user){
+        return res.status(411).json({
+            message:"User not found",
+        })
+    }
 
     if (user) {
+        const isPasswordValid = await bycrypt.compare(req.body.password, user.password);
+        if (!isPasswordValid) {
+            return res.status(411).json({
+                message: "Invalid password",
+            });
+        }
+
         const token = jwt.sign({
             userId: user._id
         }, JWT_SECRET);
@@ -99,21 +112,31 @@ const updateBody = zod.object({
 })
 
 router.put("/", authMiddleware, async (req, res) => {
-    const { success } = updateBody.safeParse(req.body)
-    if (!success) {
-        res.status(411).json({
+    const parsed = updateBody.safeParse(req.body);
+
+    if (!parsed.success) {
+        return res.status(411).json({
             message: "Error while updating information"
-        })
+        });
     }
 
-    await User.updateOne(req.body, {
-        id: req.userId
-    })
+    try {
+        await User.updateOne(
+            { _id: req.userId },           // <-- filter by user ID
+            { $set: parsed.data }          // <-- update only validated data
+        );
 
-    res.json({
-        message: "Updated successfully"
-    })
-})
+        res.json({
+            message: "Updated successfully"
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal server error",
+            error: error.message
+        });
+    }
+});
+
 
 router.get("/bulk", async (req, res) => {
     const filter = req.query.filter || "";
@@ -139,5 +162,17 @@ router.get("/bulk", async (req, res) => {
         }))
     })
 })
+router.get("/profile", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json({ user });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 module.exports = router;
