@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Link,useNavigate} from "react-router-dom";
+import { Button } from "./Button";
 
 const UserProfile=()=>{
     const [user,setUser]=useState(null);
@@ -37,11 +38,14 @@ const UserProfile=()=>{
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
+          <Link to="/dashboard"><Button label={"<- Back"}></Button></Link>
           <h2 className="text-2xl font-semibold mb-4 text-center">Your Profile</h2>
 
           <div className="space-y-2 text-lg">
             <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Phone:</strong> {user.phone}</p>
+            {/* Add more fields if needed */}
           </div>
 
           <div className="mt-6 text-center">
@@ -49,7 +53,7 @@ const UserProfile=()=>{
               to="/profile/update"
               className="text-blue-600 underline hover:text-blue-800"
             >
-              Edit Profile
+              <Button label={"Edit Profile"}></Button>
             </Link>
           </div>
         </div>
