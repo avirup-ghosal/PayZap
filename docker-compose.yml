@@ -5,8 +5,12 @@ services:
       - "3000:3000" 
     networks:
       - PayZap
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     environment:
       MONGO_URI: mongodb://mongo:27017/paytm  
+    restart: unless-stopped
     depends_on:
       - mongodb
   
@@ -20,10 +24,11 @@ services:
       - ./backend:/app
       - /app/node_modules
     environment:
-      MONGO_URI: mongodb://mongo:27017/paytm  
+      MONGO_URI: mongodb://mongo:27017/paytm
+    restart: unless-stopped  
     depends_on:
       - mongodb
-
+  
   frontend:
     build: ./frontend
     ports:
@@ -34,7 +39,8 @@ services:
     - ./frontend:/app 
     - /app/node_modules
     environment:
-      REACT_APP_API_URL: http://backend:3000 
+      REACT_APP_API_URL: http://backend:3000
+    restart: unless-stopped 
 
   mongodb:
     image: mongo:latest  
@@ -43,7 +49,8 @@ services:
     networks:
       - PayZap
     volumes:
-      - mongo-data:/data/db  
+      - mongo-data:/data/db
+    restart: unless-stopped  
 
 networks:
   PayZap:
