@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Link,useNavigate} from "react-router-dom";
-import { Button } from "./Button";
+import { Button } from "../components/Button";
 
 const UserProfile=()=>{
     const [user,setUser]=useState(null);
