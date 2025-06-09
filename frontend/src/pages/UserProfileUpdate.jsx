@@ -23,7 +23,7 @@ const UserProfileUpdate = () => {
 
     try {
       const res = await axios.put(
-        "/api/user", // or your full API URL like https://yourdomain.com/api/user
+        "http://localhost:3000/api/v1/user/update", // or your full API URL like https://yourdomain.com/api/user
         formData,
         {
           headers: {
