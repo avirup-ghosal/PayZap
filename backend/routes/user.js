@@ -6,7 +6,7 @@ const zod = require("zod");
 const { User, Account } = require("../db");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
-const bycrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const  { authMiddleware } = require("../middleware");
 
 const signupBody = zod.object({
@@ -33,7 +33,7 @@ router.post("/signup", async (req, res) => {
             message: "Email already taken/Incorrect inputs"
         })
     }
-   const hashedPassword=await bycrypt.hash(req.body.password,10);
+   const hashedPassword=await bcrypt.hash(req.body.password,10);
     const user = await User.create({
         username: req.body.username,
         password: hashedPassword,
