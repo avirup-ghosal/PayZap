@@ -16,7 +16,7 @@ export const Appbar = () => {
                 </div>
                 
             </div>
-            <div>
+            <div className="flex flex-col justify-center h-full mr-4">
                     <LogoutButton />
             </div>
         </div>
