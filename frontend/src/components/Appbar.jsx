@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { LogoutButton } from "./LogoutButton"
 
 export const Appbar = () => {
     return <div className="shadow h-14 flex justify-between">
@@ -13,6 +14,10 @@ export const Appbar = () => {
                 <div className="flex flex-col justify-center h-full text-xl">
                     <Link to="/profile">Profile</Link>
                 </div>
+                
+            </div>
+            <div>
+                    <LogoutButton />
             </div>
         </div>
     </div>
