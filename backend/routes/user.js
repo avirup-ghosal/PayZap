@@ -98,35 +98,43 @@ router.post("/signin", async (req, res) => {
 });
     
 const updateBody = zod.object({
-	password: zod.string().optional(),
-    firstName: zod.string().optional(),
-    lastName: zod.string().optional(),
-})
+  password: zod.string().optional(),
+  firstName: zod.string().optional(),
+  lastName: zod.string().optional(),
+});
 
 router.put("/update", authMiddleware, async (req, res) => {
-    const parsed = updateBody.safeParse(req.body);
+  const parsed = updateBody.safeParse(req.body);
 
-    if (!parsed.success) {
-        return res.status(411).json({
-            message: "Error while updating information"
-        });
-    }
+  if (!parsed.success) {
+    return res.status(400).json({
+      message: "Invalid update input",
+      errors: parsed.error.issues
+    });
+  }
 
-    try {
-        await User.updateOne(
-            { _id: req.userId },           // <-- filter by user ID
-            { $set: parsed.data }          // <-- update only validated data
-        );
+  const updateData = { ...parsed.data };
 
-        res.json({
-            message: "Updated successfully"
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: error.message
-        });
-    }
+  if (updateData.password) {
+    updateData.password = await bcrypt.hash(updateData.password, 10);
+  }
+
+  try {
+    await User.updateOne(
+      { _id: req.userId },
+      { $set: updateData }
+    );
+
+    res.json({
+      message: "Updated successfully"
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message
+    });
+  }
 });
 
 
