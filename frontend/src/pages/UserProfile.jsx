@@ -43,7 +43,8 @@ const UserProfile=()=>{
 
           <div className="space-y-2 text-lg">
             <p><strong>Username:</strong> {user.username}</p>
-            {/* Add more fields if needed */}
+            <p><strong>First Name:</strong> {user.firstName}</p>
+            <p><strong>Last Name:</strong> {user.lastName}</p>
           </div>
 
           <div className="mt-6 text-center">
