@@ -8,7 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const Signin = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const Signin = () => {
   const handleSignin = async () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signin`, {
-        email,
+        username,
         password,
       });
       localStorage.setItem("token", response.data.token);
@@ -34,9 +34,9 @@ export const Signin = () => {
           <Heading label={"Sign in"} />
           <SubHeading label={"Enter your credentials to access your account"} />
           <InputBox
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="avirup@gmail.com"
-            label={"Email"}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="avirup"
+            label={"Username"}
           />
           <InputBox
             onChange={(e) => setPassword(e.target.value)}
