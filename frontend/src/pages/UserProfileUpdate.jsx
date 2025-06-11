@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const UserProfileUpdate = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    phone: "",
-  });
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState(null); // success / error
 
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const handleUpdate = async () => {
+    setStatus(null);
 
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+    const updateData = {};
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
+    if (password) updateData.password = password;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (Object.keys(updateData).length === 0) {
+      setStatus({ type: "error", message: "Please fill at least one field to update." });
+      return;
+    }
 
     try {
-      const res = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/update`, // or your full API URL like https://yourdomain.com/api/user
-        formData,
+      const response = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/update`,
+        updateData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -32,55 +31,61 @@ const UserProfileUpdate = () => {
         }
       );
 
-      setMessage(res.data.message);
-      setError("");
+      setStatus({ type: "success", message: response.data.message });
+      setFirstName("");
+      setLastName("");
+      setPassword("");
     } catch (err) {
-      setMessage("");
-      setError(err.response?.data?.message || "Update failed");
+      console.error(err);
+      const msg = err.response?.data?.message || "Something went wrong";
+      setStatus({ type: "error", message: msg });
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Update Profile</h2>
-      {message && <p className="text-green-600">{message}</p>}
-      {error && <p className="text-red-600">{error}</p>}
+    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow space-y-4">
+      <h2 className="text-xl font-bold text-center">Update Profile</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          className="w-full p-2 border rounded"
-          value={formData.username}
-          onChange={handleChange}
-        />
+      <input
+        type="text"
+        placeholder="First Name"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded"
-          value={formData.email}
-          onChange={handleChange}
-        />
+      <input
+        type="text"
+        placeholder="Last Name"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
 
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone"
-          className="w-full p-2 border rounded"
-          value={formData.phone}
-          onChange={handleChange}
-        />
+      <input
+        type="password"
+        placeholder="New Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      <button
+        onClick={handleUpdate}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+      >
+        Update Profile
+      </button>
+
+      {status && (
+        <div
+          className={`text-center text-sm font-medium ${
+            status.type === "success" ? "text-green-600" : "text-red-600"
+          }`}
         >
-          Update
-        </button>
-      </form>
+          {status.message}
+        </div>
+      )}
     </div>
   );
 };
