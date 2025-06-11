@@ -8,7 +8,6 @@ export const Dashboard = () => {
         <Appbar />
         <div className="m-8">
             <AccountBalance />
-            <Balance value={"10,000"} />
             <Users />
         </div>
     </div>
