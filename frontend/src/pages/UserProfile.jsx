@@ -43,8 +43,6 @@ const UserProfile=()=>{
 
           <div className="space-y-2 text-lg">
             <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Phone:</strong> {user.phone}</p>
             {/* Add more fields if needed */}
           </div>
 
