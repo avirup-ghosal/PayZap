@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { Button } from "../components/Button";
 
 const UserProfileUpdate = () => {
   const [firstName, setFirstName] = useState("");
@@ -80,12 +81,7 @@ const UserProfileUpdate = () => {
         className="w-full p-2 border rounded"
       />
 
-      <button
-        onClick={handleUpdate}
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-      >
-        Update Profile
-      </button>
+      <Button label={"Update Profile"} onClick={handleUpdate} />
 
       {status && (
         <div
