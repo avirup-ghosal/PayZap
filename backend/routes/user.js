@@ -98,7 +98,8 @@ router.post("/signin", async (req, res) => {
 });
     
 const updateBody = zod.object({
-  password: zod.string().optional(),
+  currentPassword: zod.string(),           
+  password: zod.string().optional(),       
   firstName: zod.string().optional(),
   lastName: zod.string().optional(),
 });
@@ -113,21 +114,28 @@ router.put("/update", authMiddleware, async (req, res) => {
     });
   }
 
-  const updateData = { ...parsed.data };
-
-  if (updateData.password) {
-    updateData.password = await bcrypt.hash(updateData.password, 10);
-  }
-
   try {
-    await User.updateOne(
-      { _id: req.userId },
-      { $set: updateData }
-    );
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    res.json({
-      message: "Updated successfully"
-    });
+    
+    const isMatch = await bcrypt.compare(req.body.currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    const updateData = { ...parsed.data };
+    delete updateData.currentPassword; 
+
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    }
+
+    await User.updateOne({ _id: req.userId }, { $set: updateData });
+
+    res.json({ message: "Updated successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({
