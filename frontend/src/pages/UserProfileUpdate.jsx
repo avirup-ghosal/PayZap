@@ -4,21 +4,22 @@ import axios from "axios";
 const UserProfileUpdate = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [status, setStatus] = useState(null); // success / error
 
   const handleUpdate = async () => {
     setStatus(null);
 
-    const updateData = {};
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
-    if (password) updateData.password = password;
-
-    if (Object.keys(updateData).length === 0) {
-      setStatus({ type: "error", message: "Please fill at least one field to update." });
+    if (!currentPassword) {
+      setStatus({ type: "error", message: "Current password is required for updates." });
       return;
     }
+
+    const updateData = { currentPassword };
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
+    if (newPassword) updateData.password = newPassword;
 
     try {
       const response = await axios.put(
@@ -34,7 +35,8 @@ const UserProfileUpdate = () => {
       setStatus({ type: "success", message: response.data.message });
       setFirstName("");
       setLastName("");
-      setPassword("");
+      setNewPassword("");
+      setCurrentPassword("");
     } catch (err) {
       console.error(err);
       const msg = err.response?.data?.message || "Something went wrong";
@@ -45,6 +47,14 @@ const UserProfileUpdate = () => {
   return (
     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow space-y-4">
       <h2 className="text-xl font-bold text-center">Update Profile</h2>
+
+      <input
+        type="password"
+        placeholder="Current Password"
+        value={currentPassword}
+        onChange={(e) => setCurrentPassword(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
 
       <input
         type="text"
@@ -65,8 +75,8 @@ const UserProfileUpdate = () => {
       <input
         type="password"
         placeholder="New Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
         className="w-full p-2 border rounded"
       />
 
