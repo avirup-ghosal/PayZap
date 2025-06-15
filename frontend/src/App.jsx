@@ -9,13 +9,14 @@ import { Dashboard } from "./pages/Dashboard";
 import { SendMoney } from "./pages/SendMoney";
 import UserProfile from "./pages/UserProfile";
 import UserProfileUpdate from "./pages/UserProfileUpdate";
+import Hero from "./pages/Hero";
 
 function App() {
   return (
     <>
        <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Signup/>}/>
+          <Route path="/" element={<Hero/>}/>
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/dashboard" element={<Dashboard />} />
