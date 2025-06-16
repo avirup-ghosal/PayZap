@@ -68,7 +68,7 @@ docker compose up
 - For production, make sure to store secrets securely using environment variables or secret managers.
 
 ## NGINX Config file
-Write this in your nginx.conf file located at (/etc/nginx/nginx.conf):
+Write this in your nginx.conf file (/etc/nginx/nginx.conf):
 
 ```text
 http {
