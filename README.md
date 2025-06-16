@@ -1,6 +1,7 @@
 # 💸 PayZap – A Simple Payment Simulator
 
 **PayZap** is a lightweight MERN stack-based payment simulation platform that lets users sign up, sign in, manage profiles, and simulate sending or receiving payments — all in a secure, user-friendly environment.
+Check it out at [http://13.51.70.83:5173](http://13.51.70.83:5173).
 ## Project Description
 **PayZap** is a full-stack payment simulator built using the MERN stack. It features secure user authentication, transaction simulation, and a responsive user interface inspired by modern fintech platforms. 
 To ensure scalability and high availability, the application is **containerized** using **Docker** and deployed on an **AWS EC2 instance**.The frontend and backend services are set up using **Docker Compose**.
@@ -55,7 +56,7 @@ module.exports = {
   JWT_SECRET: "Your-Secret"
 };
 ```
-## Docker
+## 🐳 Docker Setup
 Start the project with Docker compose:
 ```bash
 cd ..
@@ -67,7 +68,7 @@ docker compose up
 - For production, make sure to store secrets securely using environment variables or secret managers.
 
 ## NGINX Config file
-Write this in your nginx.conf file located at /etc/nginx/ :
+Write this in your nginx.conf file located at (/etc/nginx/nginx.conf):
 
 ```text
 http {
@@ -103,5 +104,5 @@ events {}
 ```
 Start NGINX with:
 ```bash
-sudo systemctl start nginx
+sudo systemctl restart nginx
 ```
