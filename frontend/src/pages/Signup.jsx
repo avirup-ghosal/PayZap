@@ -7,45 +7,109 @@ import { SubHeading } from "../components/SubHeading"
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
 
-
 export const Signup = () => {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    return <div className="bg-slate-300 h-screen flex justify-center">
-    <div className="flex flex-col justify-center">
-      <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
-        <Heading label={"Sign up"} />
-        <SubHeading label={"Enter your infromation to create an account"} />
-        <InputBox onChange={e => {
-          setFirstName(e.target.value);
-        }} placeholder="John" label={"First Name"} />
-        <InputBox onChange={(e) => {
-          setLastName(e.target.value);
-        }} placeholder="Doe" label={"Last Name"} />
-        <InputBox onChange={e => {
-          setUsername(e.target.value);
-        }} placeholder="avirup@gmail.com" label={"Email"} />
-        <InputBox onChange={(e) => {
-          setPassword(e.target.value)
-        }} placeholder="123456" label={"Password"} />
-        <div className="pt-4">
-          <Button onClick={async () => {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signup`, {
-              username,
-              firstName,
-              lastName,
-              password
-            });
-            localStorage.setItem("token", response.data.token)
-            navigate("/dashboard")
-          }} label={"Sign up"} />
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-emerald-600 via-teal-600 to-green-500 flex justify-center items-center p-4">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-4 -left-4 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute top-20 -right-4 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
+      </div>
+
+      <div className="relative flex flex-col justify-center">
+        <div className="backdrop-blur-lg bg-white/90 border border-white/20 shadow-2xl rounded-2xl w-96 text-center p-8 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
+          {/* Top accent */}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <Heading label={"Sign up"} />
+            <SubHeading label={"Enter your information to create an account"} />
+          </div>
+
+          <div className="space-y-4 mt-6">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="transform transition-all duration-200 hover:scale-105">
+                <InputBox 
+                  onChange={e => {
+                    setFirstName(e.target.value);
+                  }} 
+                  placeholder="John" 
+                  label={"First Name"} 
+                />
+              </div>
+              <div className="transform transition-all duration-200 hover:scale-105">
+                <InputBox 
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }} 
+                  placeholder="Doe" 
+                  label={"Last Name"} 
+                />
+              </div>
+            </div>
+            
+            <div className="transform transition-all duration-200 hover:scale-105">
+              <InputBox 
+                onChange={e => {
+                  setUsername(e.target.value);
+                }} 
+                placeholder="avirup@gmail.com" 
+                label={"Email"} 
+              />
+            </div>
+            
+            <div className="transform transition-all duration-200 hover:scale-105">
+              <InputBox 
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                }} 
+                placeholder="123456" 
+                label={"Password"} 
+              />
+            </div>
+          </div>
+
+          <div className="pt-6">
+            <div className="transform transition-all duration-200 hover:scale-105 active:scale-95">
+              <Button 
+                onClick={async () => {
+                  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signup`, {
+                    username,
+                    firstName,
+                    lastName,
+                    password
+                  });
+                  localStorage.setItem("token", response.data.token)
+                  navigate("/dashboard")
+                }} 
+                label={"Sign up"} 
+              />
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <BottomWarning 
+              label={"Already have an account?"} 
+              buttonText={"Sign in"} 
+              to={"/signin"} 
+            />
+          </div>
+
+          {/* Bottom decorative line */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-500 rounded-b-2xl"></div>
         </div>
-        <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} />
       </div>
     </div>
-  </div>
+  )
 }
